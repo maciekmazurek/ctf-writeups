@@ -132,4 +132,4 @@ cap
 # 
 ```
 
-Now we can read the root flag.
+Now we can read the root flag located in the root's home directory.
